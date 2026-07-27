@@ -1,0 +1,592 @@
+<title>Radiation_AX 라이브 오피스</title>
+<style>
+  /* 안테나 HW 개발 회사 라이브 오피스 · 파스텔 레트로 OS 창 (34명 상세 캐릭터 · A* · 차수 시나리오) */
+  :root{
+    --bg1:#ffe6f1; --bg2:#f4e9fb; --bg3:#fff3d9; --ink:#4a3742; --muted:#9a8792;
+    --win:#ffffff; --win-line:#f4cddf; --line:#f2e3ec;
+    --tbar1:#ff9ecb; --tbar2:#c6a6f0; --accent:#ff7fb6;
+    --mint:#c6efd9; --mint-ink:#1f8a5c; --pink:#ffc7de; --pink-ink:#c53b78;
+    --lav:#ddccf7; --lav-ink:#6a45bd; --yellow:#ffe7a3; --yellow-ink:#9a7715;
+    --grayp:#ece8f0; --gray-ink:#8a8594;
+    --font:"Apple SD Gothic Neo",system-ui,-apple-system,"Malgun Gothic","Segoe UI",sans-serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--font);color:var(--ink);font-size:14px;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg3));background-attachment:fixed;
+    min-height:100vh;padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .wrap{width:100%;max-width:1220px;display:flex;flex-direction:column;gap:12px}
+  mark{background:linear-gradient(transparent 55%,#fff29e 55%);padding:0 2px}
+  .topbar{display:flex;align-items:center;gap:12px;background:var(--win);border:1px solid var(--win-line);
+    border-radius:14px;padding:9px 14px;box-shadow:0 8px 24px -16px rgba(180,70,130,.5)}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px}
+  .logo .g{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--tbar1),var(--tbar2));color:#fff;display:grid;place-items:center;font-weight:900;font-family:var(--mono)}
+  .logo small{font-family:var(--mono);color:var(--accent);font-weight:700;font-size:12px}
+  .tabs{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap}
+  .tab{border:1px solid var(--win-line);background:#fff;border-radius:10px;padding:7px 12px;font-size:12.5px;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-weight:600}
+  .tab.on{background:var(--yellow);border-color:transparent}
+  .tab .b{background:var(--accent);color:#fff;border-radius:20px;font-size:10.5px;padding:1px 7px;font-family:var(--mono)}
+  .win{background:var(--win);border:1px solid var(--win-line);border-radius:14px;overflow:hidden;box-shadow:0 12px 30px -22px rgba(150,60,110,.55)}
+  .tbar{display:flex;align-items:center;gap:8px;padding:7px 11px;background:linear-gradient(90deg,var(--tbar1),var(--tbar2));color:#fff}
+  .tbar .tt{font-family:var(--mono);font-size:12px;font-weight:600}
+  .tbar .wbtns{margin-left:auto;display:flex;gap:6px}
+  .tbar .wbtns i{width:15px;height:15px;border-radius:5px;background:rgba(255,255,255,.28);display:grid;place-items:center;font-style:normal;font-size:9px}
+  .wbody{padding:14px}
+  /* hero */
+  .hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .hero .kv{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px}
+  .hero h1{font-size:clamp(19px,3vw,26px);margin:6px 0 6px;font-weight:800}
+  .hero p{color:var(--muted);margin:0;line-height:1.55}
+  .clock{margin-left:auto;background:#2a1b28;color:#ffd3e6;border-radius:12px;padding:10px 16px;text-align:center;font-family:var(--mono)}
+  .clock .z{font-size:10px;letter-spacing:2px;opacity:.7}.clock .h{font-size:24px;font-weight:700;letter-spacing:1px}
+  .clock .s{font-size:10px;opacity:.8}
+  /* control bar */
+  .ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .btn{border:1px solid var(--win-line);background:#fff;border-radius:10px;padding:8px 13px;font-size:12.5px;cursor:pointer;font-weight:700;color:var(--ink);font-family:var(--font)}
+  .btn.prim{background:linear-gradient(135deg,var(--tbar1),var(--tbar2));color:#fff;border-color:transparent}
+  .btn.on{background:var(--mint);color:var(--mint-ink);border-color:transparent}
+  .seg{display:flex;border:1px solid var(--win-line);border-radius:10px;overflow:hidden}
+  .seg button{border:0;background:#fff;padding:8px 11px;font-family:var(--mono);font-size:12px;cursor:pointer;color:var(--muted)}
+  .seg button.on{background:var(--yellow);color:var(--yellow-ink);font-weight:800}
+  .ctl .label{font-size:11px;color:var(--muted);font-weight:700;font-family:var(--mono)}
+  .prog{flex:1;min-width:120px;height:10px;background:var(--grayp);border-radius:20px;overflow:hidden}
+  .prog b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--tbar1),var(--tbar2));transition:width .4s}
+  .pills{display:flex;gap:6px;flex-wrap:wrap}
+  .pillc{border-radius:20px;padding:5px 11px;font-size:11.5px;font-weight:800;font-family:var(--mono)}
+  .pc-work{background:var(--pink);color:var(--pink-ink)}.pc-done{background:var(--mint);color:var(--mint-ink)}.pc-wait{background:var(--lav);color:var(--lav-ink)}
+  /* stage */
+  .stage{display:grid;grid-template-columns:1fr 322px;gap:12px;align-items:start}
+  .frame{position:relative;background:var(--win);border:1px solid var(--win-line);border-radius:14px;padding:10px;box-shadow:0 12px 30px -22px rgba(150,60,110,.55)}
+  .banner{font-family:var(--mono);font-size:12.5px;font-weight:600;background:linear-gradient(90deg,#fff0f7,transparent);border-left:3px solid var(--accent);padding:7px 10px;border-radius:6px;margin-bottom:8px;min-height:30px;display:flex;align-items:center}
+  .banner .step{color:var(--accent);margin-right:6px}
+  canvas{display:block;width:100%;height:auto;border-radius:10px;touch-action:none}
+  .tip{position:fixed;z-index:60;pointer-events:none;background:var(--win);border:1px solid var(--win-line);border-radius:11px;padding:9px 12px;box-shadow:0 14px 34px -14px rgba(150,60,110,.55);font-size:12px;max-width:236px}
+  .tip[hidden]{display:none}
+  .tip .nm{font-weight:800;font-size:12.5px}
+  .tip .role{color:var(--muted);margin-top:3px;line-height:1.4}
+  .tip .chip{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:800;margin-top:7px;color:#2a1b28}
+  .tip .anim{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:5px}
+  .tip .mono{font-family:var(--mono)}
+  .side{display:flex;flex-direction:column;gap:12px}
+  .con-log{max-height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;font-size:12.5px;margin-bottom:9px}
+  .msg{display:flex;flex-direction:column;gap:2px;max-width:92%}
+  .msg .w{font-family:var(--mono);font-size:10px;color:var(--accent);font-weight:700}
+  .msg .t{background:var(--grayp);padding:6px 9px;border-radius:9px;border-top-left-radius:2px;line-height:1.4}
+  .msg.me{align-self:flex-end;align-items:flex-end}.msg.me .t{background:var(--pink);color:#5a1030;border-top-right-radius:2px;border-top-left-radius:9px}
+  .quick{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+  .quick button{background:var(--grayp);border:0;border-radius:14px;padding:5px 9px;font-size:11px;cursor:pointer;font-family:var(--mono);color:var(--ink)}
+  .quick button:hover{background:var(--accent);color:#fff}
+  .con-form{display:flex;gap:6px}
+  .con-form input{flex:1;min-width:0;background:var(--bg1);border:1px solid var(--win-line);border-radius:8px;padding:8px 10px;font-size:12.5px;color:var(--ink);font-family:inherit}
+  .con-form input:focus{outline:2px solid var(--accent)}
+  .con-form button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:0 12px;font-size:14px;cursor:pointer}
+  .badge{display:inline-block;background:var(--lav);color:var(--lav-ink);border-radius:8px;padding:4px 9px;font-size:11px;font-weight:800;font-family:var(--mono)}
+  .badge.idle{background:var(--grayp);color:var(--gray-ink)}
+  .appr h3{margin:8px 0 4px;font-size:14px}.appr .sm{color:var(--muted);font-size:12px;line-height:1.5;margin:0 0 12px}
+  .appr .go{width:100%;background:var(--yellow);color:var(--yellow-ink);border:1px solid #f2d98a;border-radius:10px;padding:11px;font-weight:800;cursor:pointer;font-size:13px}
+  .appr .go:disabled{background:var(--grayp);color:var(--gray-ink);border-color:transparent;cursor:default}
+  .feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:12px;max-height:150px;overflow-y:auto}
+  .feed li{display:flex;gap:8px}.feed .ft{font-family:var(--mono);color:var(--accent);flex:none;font-size:10.5px;padding-top:1px}
+  .roster{display:flex;flex-direction:column;gap:9px;max-height:220px;overflow-y:auto}
+  .rteam{font-size:12px}
+  .rteam .h{font-weight:800;font-size:11.5px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+  .rteam .h .dot{width:7px;height:7px;border-radius:50%;background:var(--mint-ink)}
+  .rmem{display:inline-flex;align-items:center;gap:5px;background:var(--grayp);border-radius:20px;padding:3px 8px;font-size:10.5px;margin:2px 3px 0 0;font-family:var(--mono)}
+  .rmem .sd{width:6px;height:6px;border-radius:50%}
+  .statusbar{display:flex;align-items:center;gap:10px;background:var(--win);border:1px solid var(--win-line);border-radius:12px;padding:9px 13px;font-size:12.5px;flex-wrap:wrap}
+  .statusbar .dot{width:9px;height:9px;border-radius:50%;background:var(--player,#ff5da2);box-shadow:0 0 8px #ff9ecb}
+  .statusbar .who{margin-left:auto;color:var(--muted)}.statusbar .who b{color:var(--ink)}
+  .hint{font-size:11.5px;color:var(--muted)}.hint kbd{font-family:var(--mono);background:var(--grayp);border-radius:4px;padding:1px 5px;font-size:10.5px}
+  @media (max-width:940px){.stage{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo"><span class="g">R</span> RADIATION_AX <small>AI COMPANY</small></div>
+    <nav class="tabs">
+      <span class="tab on">🏢 라이브 오피스</span>
+      <a class="tab" id="dashTab" href="#" target="_blank" rel="noopener">📊 대시보드</a>
+      <span class="tab">🗒 대표 할 일 <span class="b" id="todoN">1</span></span>
+    </nav>
+  </div>
+
+  <section class="win">
+    <div class="tbar"><span class="tt">radiation_ax.office — 라이브</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+    <div class="wbody hero">
+      <div>
+        <div class="kv">LIVE OFFICE · 34 AI STAFF · REAL-TIME</div>
+        <h1>안테나 개발 <mark>Radiation_AX</mark> Office</h1>
+        <p>출근해 자리에서 일하고, 회의실에 모여 회의하고, 대표실로 보고하러 갑니다.</p>
+      </div>
+      <div class="clock"><div class="z">SEOUL</div><div class="h" id="clk">07:00</div><div class="s" id="clkd">DV1 · 근무</div></div>
+    </div>
+  </section>
+
+  <section class="win"><div class="wbody ctl">
+    <button class="btn prim" id="scenBtn">▶ 오늘 업무 시작</button>
+    <button class="btn" id="pauseBtn">Ⅱ 일시정지</button>
+    <span class="label">속도</span>
+    <div class="seg" id="spd"><button data-s="1" class="on">1x</button><button data-s="2">2x</button><button data-s="4">4x</button></div>
+    <button class="btn" id="afBtn">📍 자동 추적</button>
+    <button class="btn" id="pubBtn">📤 보고 발행</button>
+    <div class="prog"><b id="progBar"></b></div>
+    <div class="pills"><span class="pillc pc-work" id="pWork">근무 0</span><span class="pillc pc-done" id="pDone">완료 0</span><span class="pillc pc-wait" id="pWait">연동대기 0</span></div>
+  </div></section>
+
+  <section class="win"><div class="wbody" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <span style="font-weight:800;font-size:12.5px">👕 옷 색 = 직원 상태</span>
+    <span id="legend" style="display:flex;gap:12px;flex-wrap:wrap"></span>
+    <span style="color:var(--muted);font-size:11.5px;font-family:var(--mono);margin-left:auto">동작: 타이핑=작업 · 걷기=이동 · 대화=회의 · 앉기=대기</span>
+  </div></section>
+
+  <div class="stage">
+    <div class="frame">
+      <div class="banner" id="banner"><span class="step">자유</span> 직원들이 자율 근무 중</div>
+      <canvas id="map" width="1000" height="800" aria-label="라이브 오피스 지도"></canvas>
+    </div>
+    <div class="side">
+      <section class="win"><div class="tbar"><span class="tt">ceo.console — 대표 지시창</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+        <div class="wbody">
+          <div class="con-log" id="conLog"></div>
+          <div class="quick">
+            <button data-q="왜 늦어져?">왜 늦어져?</button><button data-q="회의 소집">회의 소집</button>
+            <button data-q="해산">해산</button><button data-q="지금 브리핑">지금 브리핑</button>
+          </div>
+          <form class="con-form" id="conForm"><input id="conInput" placeholder="부서·직원 이름, 질문…" autocomplete="off" aria-label="대표 지시"/><button type="submit" aria-label="전송">▶</button></form>
+        </div></section>
+
+      <section class="win appr"><div class="tbar"><span class="tt">ceo.approval</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+        <div class="wbody"><div id="apprBody"></div>
+          <button class="go" id="apprGo" disabled>승인</button></div></section>
+
+      <section class="win"><div class="tbar"><span class="tt">live.feed</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+        <div class="wbody"><ul class="feed" id="feed"></ul></div></section>
+
+      <section class="win"><div class="tbar"><span class="tt">staff.roster</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+        <div class="wbody"><div class="roster" id="roster"></div></div></section>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <span class="dot"></span><span class="mono" id="where" style="font-weight:700">출입구</span>
+    <span class="hint" style="margin-left:12px"><kbd>↑↓←→</kbd>/WASD로 대표(나) 이동</span>
+    <span class="who" id="who">직원에게 다가가면 상태 표시</span>
+  </div>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const DASH_URL="dashboard.html";
+document.getElementById('dashTab').href=DASH_URL;
+const COLS=50, ROWS=40, T=20;
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const canvas=document.getElementById('map'), ctx=canvas.getContext('2d');
+canvas.width=COLS*T; canvas.height=ROWS*T;
+const bg=document.createElement('canvas'); bg.width=canvas.width; bg.height=canvas.height; const bctx=bg.getContext('2d');
+
+const P={
+  card:'#ffffff', cardLine:'#f0d3e2', floorLine:'#f6e9f1',
+  dev:'#e9f8f1', verify:'#fff4dd', record:'#f1eafb', etc:'#eef1f5',
+  devA:'#57c9a5', verifyA:'#e0a94a', recordA:'#9b7fd4', etcA:'#8aa0b0',
+  desk:'#ecd9c6', deskTop:'#6fd3c4', door:'#ffd98f', label:'#5b4a55', dot:'#6fd39a', table:'#d7c6b4', lounge:'#d9c9f5',
+  '진행중':'#5cc7a4','대기':'#b3aabf','연동대기':'#b79ae6','승인대기':'#f0b24a','완료':'#79cfe0',
+  accent:'#ff7fb6', player:'#ff5da2', glow:'#ff9ecb', bgTop:'#f7ecf7', bgBot:'#efe6fb',
+  mono:'ui-monospace,"SF Mono",Menlo,Consolas,monospace'
+};
+const stageCard={dev:P.dev,verify:P.verify,record:P.record,etc:P.etc};
+const stageA={dev:P.devA,verify:P.verifyA,record:P.recordA,etc:P.etcA};
+function shade(hex,a){const n=parseInt(hex.slice(1),16);let r=(n>>16)+a,g=((n>>8)&255)+a,b=(n&255)+a;r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));return`rgb(${r},${g},${b})`;}
+function roundRect(c,x,y,w,h,r){c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);}
+
+const rooms=[
+  {name:'기구1팀',   x:2, y:2, w:7, h:10, stage:'dev', door:'S', emp:[['MAT-CHK','소재현'],['EXTRACT','정추출'],['PROPOSE','추천희']]},
+  {name:'기구2팀',   x:10,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['ORIG-GD','원보존'],['IMPORT','임수입'],['APPLY','물성애'],['MODEL','모델경']]},
+  {name:'EM 시뮬팀', x:18,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['EM-LEAD','세팅찬'],['SETUP','포트나'],['SOLVE','에러솔'],['POST','추출빈']]},
+  {name:'PCB 시뮬팀',x:26,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['PCB-LEAD','정합수'],['ODB','오디비'],['S21','손실래'],['LINE','라인탁']]},
+  {name:'회로1팀',   x:34,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['RF1-LEAD','최적솔'],['ADS','회로다'],['LINK','연결진'],['SWEEP','스윕나'],['BEST3','베스트']]},
+  {name:'회로2팀',   x:42,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['RF2-LEAD','실측판'],['MEAS','이피에프'],['MATCH','매칭호']]},
+  {name:'성능측정팀',x:2, y:15,w:8, h:10, stage:'verify', door:'N', emp:[['MEAS-LEAD','재현확'],['CHAMBER','챔버미'],['SHEET','정리표']]},
+  {name:'성능리뷰팀',x:11,y:15,w:8, h:10, stage:'verify', door:'N', emp:[['SPEC-JDG','판정관'],['COMPARE','대조빈']]},
+  {name:'협업소통팀',x:20,y:15,w:8, h:10, stage:'record', door:'N', emp:[['GUIDE-LD','근거찬'],['WRITE','가이드나']]},
+  {name:'자동화운영팀',x:29,y:15,w:8,h:10, stage:'record', door:'N', emp:[['OPS-LEAD','연동수'],['LOG','로그미']]},
+  {name:'비서실',    x:38,y:15,w:8, h:10, stage:'record', door:'N', emp:[['CHIEF','요약희'],['DIGEST','취합나']]},
+  {name:'대표실',    x:2, y:28,w:10,h:10, stage:'etc', door:'N', ceo:['대표','안현배']},
+  {name:'회의실',    x:13,y:28,w:12,h:10, stage:'etc', door:'N', meeting:true},
+  {name:'라운지',    x:26,y:28,w:12,h:10, stage:'etc', door:'N', lounge:true},
+  {name:'출입구',    x:39,y:28,w:9, h:10, stage:'etc', door:'N', entrance:true},
+];
+
+const grid=Array.from({length:ROWS},()=>Array(COLS).fill('F'));
+let spawn={x:43,y:35}; const meetingSpots=[], loungeSpots=[]; let meetRoom=null;
+for(let x=0;x<COLS;x++){grid[0][x]='W';grid[ROWS-1][x]='W';}
+for(let y=0;y<ROWS;y++){grid[y][0]='W';grid[y][COLS-1]='W';}
+for(const r of rooms){
+  for(let x=r.x;x<r.x+r.w;x++){grid[r.y][x]='W';grid[r.y+r.h-1][x]='W';}
+  for(let y=r.y;y<r.y+r.h;y++){grid[y][r.x]='W';grid[y][r.x+r.w-1]='W';}
+  const mx=r.x+(r.w>>1); if(r.door==='S')grid[r.y+r.h-1][mx]='O'; if(r.door==='N')grid[r.y][mx]='O';
+  r.doorX=mx; r.deskCells=[];
+  if(r.emp||r.ceo){const slots=[];for(let gy=r.y+2;gy<=r.y+r.h-2;gy+=2)for(let gx=r.x+1;gx<=r.x+r.w-2;gx+=2)slots.push([gx,gy]);
+    const list=r.ceo?[r.ceo]:r.emp,chosen=r.ceo?[slots[slots.length>>1]]:slots;
+    for(let i=0;i<list.length;i++){const[gx,gy]=chosen[i];grid[gy][gx]='D';r.deskCells.push([gx,gy]);}}
+  if(r.meeting){meetRoom=r;const tx=r.x+2,ty=r.y+3,tw=r.w-4,th=r.h-6;r.table={tx,ty,tw,th};for(let y=ty;y<ty+th;y++)for(let x=tx;x<tx+tw;x++)grid[y][x]='T';}
+  if(r.lounge){r.loungePts=[[r.x+2,r.y+3],[r.x+3,r.y+3],[r.x+r.w-3,r.y+3],[r.x+2,r.y+r.h-3],[r.x+r.w-4,r.y+r.h-3],[r.x+r.w-3,r.y+r.h-3]];for(const[px,py]of r.loungePts)grid[py][px]='L';}
+  if(r.entrance){grid[ROWS-1][mx]='E';spawn={x:mx,y:r.y+r.h-2};}
+}
+const WALK=new Set(['F','O','E']);
+const walkable=(x,y)=>x>=0&&y>=0&&x<COLS&&y<ROWS&&WALK.has(grid[y][x]);
+for(const r of rooms){if(!(r.meeting||r.lounge))continue;const arr=r.meeting?meetingSpots:loungeSpots;
+  for(let y=r.y+1;y<r.y+r.h-1;y++)for(let x=r.x+1;x<r.x+r.w-1;x++)if(walkable(x,y))arr.push({x,y});}
+const meetSeats=[];{const{tx,ty,tw,th}=meetRoom.table;
+  for(let x=tx;x<tx+tw;x++)if(walkable(x,ty-1))meetSeats.push({x,y:ty-1,row:'T'});
+  for(let x=tx;x<tx+tw;x++)if(walkable(x,ty+th))meetSeats.push({x,y:ty+th,row:'B'});}
+const topS=meetSeats.filter(s=>s.row==='T'),botS=meetSeats.filter(s=>s.row==='B');
+const meetSeatFor=i=>i%2===0?topS[i>>1]:botS[i>>1];
+// 회의실 내부 타일 (회의중 비팀장 진입 차단용)
+const meetTileSet=new Set();
+for(let y=meetRoom.y+1;y<meetRoom.y+meetRoom.h-1;y++)for(let x=meetRoom.x+1;x<meetRoom.x+meetRoom.w-1;x++)meetTileSet.add(x+','+y);
+let meetingActive=false;
+
+// 직원 34명 (외모 상세)
+const skinTones=['#f4c6a0','#ecb489','#f7d2b3','#dba173','#c78a5e'];
+const hairColors=['#33251f','#4d3324','#232a30','#6a4326','#8a5a2c','#2b2b33','#5a3d55','#7a4a3a'];
+const usedSeats=new Set();
+function findSeat(dx,dy){for(const[ox,oy]of[[0,1],[0,-1],[-1,0],[1,0]]){const x=dx+ox,y=dy+oy;if(walkable(x,y)&&!usedSeats.has(x+','+y)){usedSeats.add(x+','+y);return{x,y};}}return{x:dx,y:dy+1};}
+const employees=[], byCode={};
+for(const r of rooms){if(!r.emp)continue;
+  r.deskCells.forEach((cell,i)=>{const[dx,dy]=cell,seat=findSeat(dx,dy);const idx=employees.length;
+    const e={code:r.emp[i][0],name:r.emp[i][1],dept:r.name,stage:r.stage,home:{x:seat.x,y:seat.y},
+      gx:seat.x,gy:seat.y,ex:(seat.x+.5)*T,ey:(seat.y+.5)*T,path:[],dest:{x:seat.x,y:seat.y},
+      state:'진행중',anim:'typing',face:'D',phase:Math.random()*6.28,until:performance.now()+1000+Math.random()*6000,
+      replanAt:0,lead:i===0,hold:false,sayClear:0,say:null,speaking:false,
+      skin:skinTones[idx%skinTones.length],hair:hairColors[(idx*3+2)%hairColors.length]};
+    employees.push(e);byCode[e.code]=e;});
+}
+const player={...spawn};
+
+function occupied(x,y,self){if(player.x===x&&player.y===y)return true;for(const e of employees)if(e!==self&&e.gx===x&&e.gy===y)return true;return false;}
+function astar(sx,sy,gx,gy,self){if(sx===gx&&sy===gy)return[];
+  const key=(x,y)=>x+','+y,open=[{x:sx,y:sy,f:0}],g={[key(sx,sy)]:0},came={},seen=new Set();
+  while(open.length){let bi=0;for(let i=1;i<open.length;i++)if(open[i].f<open[bi].f)bi=i;
+    const cur=open.splice(bi,1)[0],ck=key(cur.x,cur.y);
+    if(cur.x===gx&&cur.y===gy){const path=[];let k=ck;while(came[k]){const[px,py]=k.split(',').map(Number);path.unshift({x:px,y:py});k=came[k];}return path;}
+    if(seen.has(ck))continue;seen.add(ck);
+    for(const[ox,oy]of[[0,1],[0,-1],[-1,0],[1,0]]){const nx=cur.x+ox,ny=cur.y+oy,nk=key(nx,ny);
+      if(!walkable(nx,ny))continue;const isGoal=nx===gx&&ny===gy;if(!isGoal&&occupied(nx,ny,self))continue;
+      if(meetingActive&&self&&!self.lead&&meetTileSet.has(nx+','+ny))continue; // 회의중: 비팀장 회의실 진입 금지
+      const ng=g[ck]+1;if(g[nk]===undefined||ng<g[nk]){g[nk]=ng;came[nk]=ck;open.push({x:nx,y:ny,f:ng+Math.abs(nx-gx)+Math.abs(ny-gy)});}}}
+  return null;}
+function planPath(e,d){if(e.gx===d.x&&e.gy===d.y){e.path=[];return;}e.path=astar(e.gx,e.gy,d.x,d.y,e)||[];}
+function pickSpot(spots){const taken=new Set();for(const e of employees){taken.add(e.dest.x+','+e.dest.y);taken.add(e.gx+','+e.gy);}const free=spots.filter(s=>!taken.has(s.x+','+s.y));return free.length?free[Math.random()*free.length|0]:null;}
+function chooseState(e,now){const r=Math.random();let s;if(r<0.55)s='진행중';else if(r<0.70)s='대기';else if(r<0.80)s='연동대기';else if(r<0.92)s='승인대기';else s='완료';
+  e.state=s;let d=e.home;
+  if(s==='승인대기'){if(e.lead)d=pickSpot(meetingSpots)||e.home;else{s='대기';e.state='대기';}} // 비팀장은 회의실 안 감
+  else if(s==='완료')d=pickSpot(loungeSpots)||e.home;
+  e.dest=d;planPath(e,d);e.until=now+3500+Math.random()*6500;}
+
+let mode='free', timeScale=1, paused=false, af=false;
+const BASE_SPEED=3.4;
+const atCenter=e=>Math.abs((e.gx+.5)*T-e.ex)<0.8&&Math.abs((e.gy+.5)*T-e.ey)<0.8;
+function updateEmp(e,now,dt){
+  if(e.sayClear&&now>e.sayClear){e.say=null;e.sayClear=0;}
+  if(mode==='free'&&!e.hold&&now>e.until)chooseState(e,now);
+  if(e.path.length&&atCenter(e)){const n=e.path[0];
+    if(!occupied(n.x,n.y,e)){e.path.shift();e.gx=n.x;e.gy=n.y;}
+    else if(now>e.replanAt){planPath(e,e.dest);e.replanAt=now+400+Math.random()*500;}}
+  const tx=(e.gx+.5)*T,ty=(e.gy+.5)*T,sp=BASE_SPEED*T*dt/1000;
+  if(tx>e.ex)e.ex=Math.min(tx,e.ex+sp);else e.ex=Math.max(tx,e.ex-sp);
+  if(ty>e.ey)e.ey=Math.min(ty,e.ey+sp);else e.ey=Math.max(ty,e.ey-sp);
+  const moving=e.path.length>0||Math.abs(tx-e.ex)>1||Math.abs(ty-e.ey)>1;
+  if(moving){if(Math.abs(tx-e.ex)>Math.abs(ty-e.ey))e.face=tx>e.ex?'R':'L';else e.face=ty>e.ey?'D':'U';}
+  if(e.say)e.anim='talk';else if(moving)e.anim='walk';else e.anim=e.state==='진행중'?'typing':e.state==='승인대기'?'talk':'sit';
+}
+
+// 시나리오
+const PIPE=[
+  {t:'work',dept:['기구1팀'],dur:3000,say:'① 물성 정보 추출',feed:'기구1팀 물성 추출 시작'},
+  {t:'work',dept:['기구2팀'],dur:3000,say:'② CST 기구 수정',feed:'기구2팀 CST 기구 수정'},
+  {t:'work',dept:['EM 시뮬팀','PCB 시뮬팀'],dur:3400,say:'③ EM / PCB 시뮬 (병렬)',feed:'EM·PCB 시뮬 병렬 진행'},
+  {t:'work',dept:['회로1팀'],dur:3000,say:'④ 단독 매칭회로 Best 3',feed:'회로1팀 sweep 최적화'},
+  {t:'work',dept:['회로2팀'],dur:2800,say:'④ 실측 반영 매칭회로',feed:'회로2팀 실측 반영'},
+  {t:'meet',gate:'측정할 회로안 확정',btn:'승인 · 측정 진행',feed:'회의 소집 — 측정 회로안',
+    lines:[['RF1-LEAD','회로 Best 3, sweep 근거까지 정리했습니다'],['RF2-LEAD','실측 반영안, 시뮬과 0.4dB 차이입니다'],['MEAS-LEAD','챔버 예약 완료. 안만 정하면 측정 갑니다']]},
+  {t:'work',dept:['성능측정팀'],dur:3400,say:'⑥ 3D 챔버 측정',feed:'성능측정팀 챔버 측정'},
+  {t:'work',dept:['성능리뷰팀'],dur:2800,say:'⑥ Spec Pass/Fail 판정',feed:'성능리뷰팀 판정'},
+  {t:'meet',gate:'다음 차수 수정 방향',btn:'승인 · 차수 마감',feed:'회의 소집 — 수정 방향',
+    lines:[['SPEC-JDG','TRP 2개 밴드 Fail, TIS는 Pass입니다'],['GUIDE-LD','다음 차수 시정수 변경점 3건 정리했습니다'],['CHIEF','대표님 결정만 남았습니다']]},
+  {t:'work',dept:['협업소통팀'],dur:2600,say:'⑧ 차수 수정 가이드',feed:'협업소통팀 가이드 작성'},
+  {t:'work',dept:['자동화운영팀'],dur:2200,say:'⑧ 연동·로그 정리',feed:'자동화운영팀 로그 정리'},
+  {t:'work',dept:['비서실'],dur:2600,say:'⑧ 대표 브리핑',feed:'비서실 브리핑 취합'},
+];
+const dir={i:0,phase:null,t0:0,dlg:0,lineUntil:0,cycle:1,parts:[],approved:false};
+const banner=document.getElementById('banner');
+function setBanner(h){banner.innerHTML=`<span class="step">DV${dir.cycle}</span> ${h}`;}
+function enterStep(now){const s=PIPE[dir.i];dir.t0=now;
+  meetingActive=(s.t==='meet'); // 회의 단계에만 회의실 잠금
+  if(s.feed)pushFeed(s.feed);
+  if(s.t==='work'){dir.phase='work';
+    for(const e of employees){e.say=null;e.speaking=false;e.state=s.dept.includes(e.dept)?'진행중':'대기';e.dest={...e.home};planPath(e,e.dest);}
+    setBanner(`▶ ${s.say}`);
+  }else{dir.phase='gather';dir.parts=s.lines.map(l=>byCode[l[0]]);
+    for(const e of employees){e.say=null;e.speaking=false;if(!dir.parts.includes(e)){e.state='대기';e.dest={...e.home};planPath(e,e.dest);}}
+    dir.parts.forEach((e,idx)=>{const seat=meetSeatFor(idx)||e.home;e.state='승인대기';e.dest={x:seat.x,y:seat.y};planPath(e,e.dest);});
+    setBanner(`🗣 회의 — ${s.gate}`);}
+  updateApproval();
+}
+const allAt=list=>list.every(e=>e.gx===e.dest.x&&e.gy===e.dest.y&&atCenter(e));
+function startLine(now){const s=PIPE[dir.i],sp=dir.parts[dir.dlg];dir.parts.forEach(p=>p.speaking=false);sp.speaking=true;sp.say=s.lines[dir.dlg][1];dir.lineUntil=now+2600;setBanner(`🗣 ${s.gate} — <b>${sp.name}</b>`);}
+function nextStep(now){dir.i++;if(dir.i>=PIPE.length){dir.cycle++;dir.i=0;pushFeed(`DV${dir.cycle} 차수 착수`);}enterStep(now);}
+function directorTick(now){const s=PIPE[dir.i];
+  if(dir.phase==='work'){if(now-dir.t0>=s.dur)nextStep(now);}
+  else if(dir.phase==='gather'){if(allAt(dir.parts)||now-dir.t0>9000){dir.phase='dlg';dir.dlg=0;startLine(now);}}
+  else if(dir.phase==='dlg'){if(now>=dir.lineUntil){dir.parts[dir.dlg].say=null;dir.parts[dir.dlg].speaking=false;dir.dlg++;
+    if(dir.dlg<s.lines.length)startLine(now);
+    else if(s.gate){dir.phase='gate';updateApproval();pushFeed(`대표 승인 대기 — ${s.gate}`);setBanner(`⏸ 대표 승인 대기 — ${s.gate}`);}
+    else{dir.phase='adjourn';dir.t0=now;for(const e of dir.parts){e.state='대기';e.dest={...e.home};planPath(e,e.dest);}}}}
+  else if(dir.phase==='gate'){if(dir.approved){dir.approved=false;pushFeed(`✔ 대표 승인 — ${s.gate}`);dir.phase='adjourn';dir.t0=now;updateApproval();for(const e of dir.parts){e.say=null;e.speaking=false;e.state='완료';e.dest={...e.home};planPath(e,e.dest);}}}
+  else if(dir.phase==='adjourn'){if(allAt(dir.parts)||now-dir.t0>9000)nextStep(now);}
+}
+function startScenario(){mode='scenario';dir.cycle=1;dir.i=0;for(const e of employees){e.path=[];e.hold=false;e.say=null;e.sayClear=0;}pushFeed('DV1 차수 착수 · 07:00');enterStep(simClock);scenBtn.textContent='■ 자유 모드';}
+function stopScenario(){mode='free';dir.phase=null;meetingActive=false;document.getElementById('scenBtn').textContent='▶ 오늘 업무 시작';banner.innerHTML='<span class="step">자유</span> 직원들이 자율 근무 중';for(const e of employees){e.say=null;e.speaking=false;e.until=simClock+Math.random()*3000;}updateApproval();}
+
+// 렌더 — 방 카드
+function renderStatic(){
+  const grd=bctx.createLinearGradient(0,0,0,bg.height);grd.addColorStop(0,P.bgTop);grd.addColorStop(1,P.bgBot);
+  bctx.fillStyle=grd;bctx.fillRect(0,0,bg.width,bg.height);
+  for(const r of rooms){const X=r.x*T,Y=r.y*T,W=r.w*T,H=r.h*T;
+    bctx.save();roundRect(bctx,X+3,Y+3,W-6,H-6,12);bctx.fillStyle=P.card;bctx.fill();
+    bctx.lineWidth=2;bctx.strokeStyle=shade(stageA[r.stage],40);bctx.stroke();
+    // header tint
+    roundRect(bctx,X+3,Y+3,W-6,22,12);bctx.fillStyle=stageCard[r.stage];bctx.fill();
+    bctx.restore();
+    // 상태 점
+    bctx.fillStyle=P.dot;bctx.beginPath();bctx.arc(X+W-13,Y+14,4,0,7);bctx.fill();
+    // 이름
+    bctx.fillStyle=P.label;bctx.font='700 12px '+"'Apple SD Gothic Neo',system-ui,sans-serif";bctx.textAlign='left';bctx.textBaseline='middle';
+    bctx.fillText(r.name,X+11,Y+14);
+    // 문
+    if(r.door){const dx=r.doorX*T; const dy=(r.door==='S')?(Y+H-6):(Y+2);
+      bctx.fillStyle=P.door;roundRect(bctx,dx+3,dy,T-6,4,2);bctx.fill();}
+    // 책상
+    for(const[gx,gy]of r.deskCells){const dX=gx*T,dY=gy*T;
+      bctx.fillStyle=P.desk;roundRect(bctx,dX+3,dY+6,T-6,T-9,3);bctx.fill();
+      bctx.fillStyle=P.deskTop;roundRect(bctx,dX+6,dY+7,T-12,4,1.5);bctx.fill();}
+    if(r.table){const{tx,ty,tw,th}=r.table;bctx.fillStyle=P.table;roundRect(bctx,tx*T+3,ty*T+3,tw*T-6,th*T-6,6);bctx.fill();}
+    if(r.loungePts)for(const[px,py]of r.loungePts){bctx.fillStyle=P.lounge;bctx.beginPath();bctx.arc(px*T+T/2,py*T+T/2,T/2-3,0,7);bctx.fill();}
+    if(r.ceo){const[gx,gy]=r.deskCells[0]||[r.x+2,r.y+4];bctx.fillStyle=P.accent;bctx.font='700 10px '+"'Apple SD Gothic Neo',sans-serif";bctx.fillText('대표 안현배',gx*T-T,gy*T+T+4);}
+  }
+}
+
+// 코드 → 담당 업무 (사규 §1 맡는 일)
+const ROLE={
+ 'MAT-CHK':'물성 출처 검증·반려 판단','EXTRACT':'승인원 PDF 물성 추출','PROPOSE':'CST용 물성 추천',
+ 'ORIG-GD':'원본 보존·형상 일치 판단','IMPORT':'NX .prt CST import','APPLY':'부품별 물성 적용','MODEL':'CAD 모델링',
+ 'EM-LEAD':'세팅·Error 최종 확인','SETUP':'Port·Mesh·Boundary·solver','SOLVE':'시뮬 Error 해결','POST':'S-param/TRP/TIS 추출',
+ 'PCB-LEAD':'임피던스 정합 판단','ODB':'ODB++ import','S21':'지정 Net S21 추출','LINE':'라인 패턴·width 최적화',
+ 'RF1-LEAD':'회로 Best 3 선정·근거','ADS':'회로도 ADS 구성','LINK':'S-parameter 연결','SWEEP':'LC값 sweep 최적화','BEST3':'추천 회로 Best 3 정리',
+ 'RF2-LEAD':'실측-시뮬 정합 판단','MEAS':'실측(.s1p/.eff) 분석','MATCH':'실측 반영 매칭회로',
+ 'MEAS-LEAD':'측정조건·재현성 확인','CHAMBER':'3D 챔버 TRP/TIS 측정','SHEET':'측정 결과 엑셀 정리',
+ 'SPEC-JDG':'Spec Pass/Fail 판정','COMPARE':'스펙 대조·메일 초안',
+ 'GUIDE-LD':'수정 가이드 근거 판단','WRITE':'차수 수정 가이드 작성',
+ 'OPS-LEAD':'연동·재시도 관리','LOG':'연동 모니터링·로그',
+ 'CHIEF':'전사 브리핑','DIGEST':'부서 보고 취합'};
+const STATE_MEAN={'진행중':'작업 중','대기':'앞 단계 대기','연동대기':'외부 자료 대기','승인대기':'회의·승인 대기','완료':'단계 완료'};
+const animKor=a=>a==='typing'?'타이핑(작업)':a==='walk'?'걷기(이동)':a==='talk'?'대화(회의)':'앉기(대기)';
+
+// 직원 픽셀 캐릭터 (옷 색 = 상태 5종)
+let hoverEmp=null;
+const PXU=2, CW=7;
+function drawEmp(e,now){
+  const t=reduce?0:now;const walk=e.anim==='walk',typ=e.anim==='typing',talk=e.anim==='talk',sit=e.anim==='sit';
+  const legf=Math.floor(t/140+e.phase*3)%2;
+  const bob=walk?(legf?-1:0):typ?(Math.floor(t/220)%2?0:-1):0;
+  const bx=Math.round(e.ex-(CW*PXU)/2), by=Math.round(e.ey-9*PXU+5)+bob+(sit?2:0);
+  const put=(gx,gy,c)=>{ctx.fillStyle=c;ctx.fillRect(bx+gx*PXU,by+gy*PXU,PXU,PXU);};
+  const box=(gx,gy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(bx+gx*PXU,by+gy*PXU,w*PXU,h*PXU);};
+  const shirt=P[e.state]||'#8899aa', legc=shade(shirt,-40);
+  ctx.fillStyle='rgba(70,30,50,.14)';ctx.beginPath();ctx.ellipse(e.ex,e.ey+7,6,2,0,0,7);ctx.fill();
+  if(e===hoverEmp||(af&&(e.speaking||(mode==='scenario'&&e.state==='진행중')))){
+    ctx.strokeStyle=e===hoverEmp?P.player:P.accent;ctx.globalAlpha=e===hoverEmp?.95:.5;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(e.ex,e.ey-4,13,0,7);ctx.stroke();ctx.globalAlpha=1;}
+  // 머리카락 + 얼굴 + 눈
+  box(1,0,5,2,e.hair); box(1,2,5,2,e.skin); put(1,2,e.hair); put(5,2,e.hair);
+  const sh=e.face==='L'?-1:e.face==='R'?1:0;
+  put(Math.max(1,2+sh),2,'#3a2b33'); put(Math.min(5,4+sh),2,'#3a2b33');
+  if(talk&&Math.floor(t/200)%2)put(3,3,'#b33a5a');
+  // 몸통 (셔츠=상태색)
+  box(1,4,5,3,shirt); put(1,4,shade(shirt,16)); put(5,4,shade(shirt,16));
+  // 팔
+  if(typ){put(0,5,shirt);put(6,5,shirt);put(1,6,e.skin);put(5,6,e.skin);}
+  else if(talk){put(0,4,shirt);put(6,3,shirt);put(0,5,e.skin);put(6,2,e.skin);}
+  else{put(0,4,shirt);put(6,4,shirt);put(0,5,e.skin);put(6,5,e.skin);}
+  // 다리
+  if(sit){put(2,7,legc);put(4,7,legc);}
+  else if(walk){ if(legf){put(2,7,legc);put(2,8,legc);put(4,7,legc);} else {put(4,7,legc);put(4,8,legc);put(2,7,legc);} }
+  else{put(2,7,legc);put(2,8,legc);put(4,7,legc);put(4,8,legc);}
+  // 모니터 (타이핑)
+  if(typ){box(1,8,5,1,'#33424a');ctx.globalAlpha=(Math.floor(t/180)%2)?1:.5;box(2,8,3,1,P.deskTop);ctx.globalAlpha=1;}
+  const headTop=by;
+  // 말풍선 점 (대화·대사 없을 때)
+  if(talk&&!e.say){ctx.fillStyle='#fff';ctx.strokeStyle=P.cardLine;ctx.lineWidth=1;roundRect(ctx,e.ex-8,headTop-11,16,9,4);ctx.fill();ctx.stroke();
+    ctx.fillStyle=P.accent;for(let i=0;i<3;i++){ctx.globalAlpha=(Math.floor(t/220)%3===i)?1:.4;ctx.beginPath();ctx.arc(e.ex-4+i*4,headTop-6.5,1.1,0,7);ctx.fill();}ctx.globalAlpha=1;}
+  // 대사 텍스트
+  if(e.say){ctx.font='600 10.5px "Apple SD Gothic Neo",system-ui,sans-serif';const w=ctx.measureText(e.say).width+14,h=17;
+    let sx=e.ex-w/2,sy=headTop-7-h;if(sx<3)sx=3;if(sx+w>canvas.width-3)sx=canvas.width-3-w;if(sy<3)sy=e.ey+9;
+    ctx.fillStyle='#fff';ctx.strokeStyle=P.cardLine;ctx.lineWidth=1;roundRect(ctx,sx,sy,w,h,6);ctx.fill();ctx.stroke();
+    ctx.fillStyle=stageA[e.stage];roundRect(ctx,sx,sy,3.5,h,2);ctx.fill();
+    ctx.fillStyle=P.label;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(e.say,sx+9,sy+h/2+.5);}
+  // 이름표
+  if(mode==='scenario'&&!e.say&&(e.state==='진행중'||e.state==='승인대기')){ctx.fillStyle=P.label;ctx.font='600 8px '+P.mono;ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(e.code,e.ex,headTop-3);}
+}
+function drawPlayer(){const cx=(player.x+.5)*T,cy=(player.y+.5)*T;
+  const bx=Math.round(cx-(CW*PXU)/2),by=Math.round(cy-9*PXU+5);
+  const put=(gx,gy,c)=>{ctx.fillStyle=c;ctx.fillRect(bx+gx*PXU,by+gy*PXU,PXU,PXU);};
+  const box=(gx,gy,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(bx+gx*PXU,by+gy*PXU,w*PXU,h*PXU);};
+  ctx.fillStyle='rgba(70,30,50,.16)';ctx.beginPath();ctx.ellipse(cx,cy+7,6,2,0,0,7);ctx.fill();
+  const shirt=P.player,legc=shade(shirt,-34);
+  box(1,0,5,2,'#5a3d55');box(1,2,5,2,'#f4c6a0');put(2,2,'#3a2b33');put(4,2,'#3a2b33');
+  box(1,4,5,3,shirt);put(1,4,shade(shirt,16));put(5,4,shade(shirt,16));put(0,4,shirt);put(6,4,shirt);put(0,5,'#f4c6a0');put(6,5,'#f4c6a0');
+  put(2,7,legc);put(2,8,legc);put(4,7,legc);put(4,8,legc);
+  ctx.fillStyle=P.player;ctx.font='700 9px '+P.mono;ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('대표',cx,by-2);}
+
+let last=performance.now(), simClock=performance.now();
+function frame(real){const dt=Math.min(40,real-last);last=real;
+  if(!paused){const sdt=dt*timeScale;simClock+=sdt;
+    if(mode==='scenario')directorTick(simClock);
+    for(const e of employees)updateEmp(e,simClock,sdt);}
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(bg,0,0);
+  const sorted=[...employees].sort((a,b)=>a.ey-b.ey);
+  for(const e of sorted)drawEmp(e,simClock);
+  drawPlayer();
+  requestAnimationFrame(frame);}
+
+// UI 업데이트
+const whereEl=document.getElementById('where'),whoEl=document.getElementById('who');
+function inRoom(px,py){for(const r of rooms)if(px>r.x&&px<r.x+r.w-1&&py>r.y&&py<r.y+r.h-1)return r;return null;}
+function updateStatus(){const r=inRoom(player.x,player.y);whereEl.textContent=r?r.name:'복도';
+  let near=null,best=9;for(const e of employees){const d=Math.abs(e.gx-player.x)+Math.abs(e.gy-player.y);if(d<best){best=d;near=e;}}
+  whoEl.innerHTML=(near&&best<=1)?`<b>${near.name}</b>·${near.code} — <b style="color:${P[near.state]}">${near.state}</b>/${near.anim}`:'직원에게 다가가면 상태 표시';}
+function counts(){const c={'진행중':0,'대기':0,'연동대기':0,'승인대기':0,'완료':0};for(const e of employees)c[e.state]++;return c;}
+function updatePills(){const c=counts();document.getElementById('pWork').textContent='근무 '+(c['진행중']);document.getElementById('pDone').textContent='완료 '+c['완료'];document.getElementById('pWait').textContent='연동대기 '+c['연동대기'];
+  const appr=c['승인대기'];document.getElementById('todoN').textContent=(mode==='scenario'&&dir.phase==='gate')?1:appr>0?1:0;}
+function updateProgress(){const b=document.getElementById('progBar'),d=document.getElementById('clkd');
+  if(mode==='scenario'){b.style.width=Math.round(dir.i/PIPE.length*100)+'%';d.textContent=`DV${dir.cycle} · ${dir.phase==='gate'?'승인대기':'진행'}`;}
+  else{b.style.width='0%';d.textContent='DV1 · 자유';}}
+const rosterEl=document.getElementById('roster');
+function updateRoster(){rosterEl.innerHTML=rooms.filter(r=>r.emp).map(r=>{
+  const mem=employees.filter(e=>e.dept===r.name);
+  return `<div class="rteam"><div class="h"><span class="dot"></span>${r.name}</div>${mem.map(e=>`<span class="rmem"><span class="sd" style="background:${P[e.state]}"></span>${e.code}</span>`).join('')}</div>`;}).join('');}
+setInterval(()=>{updateStatus();updatePills();updateProgress();updateRoster();},500);
+
+// live.feed
+const feedEl=document.getElementById('feed');let feedMin=0;const feed=[];
+function officeTime(){const h=7+Math.floor(feedMin/60),m=feedMin%60;feedMin+=Math.floor(Math.random()*4)+2;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;}
+function pushFeed(text){feed.unshift({t:officeTime(),text});if(feed.length>10)feed.pop();
+  feedEl.innerHTML=feed.map(f=>`<li><span class="ft">${f.t}</span><span>${f.text}</span></li>`).join('');}
+pushFeed('전 직원 출근 · 자리 배치 완료');
+
+// ceo.approval
+const apprBody=document.getElementById('apprBody'),apprGo=document.getElementById('apprGo');
+function updateApproval(){
+  if(mode==='scenario'&&dir.phase==='gate'){const s=PIPE[dir.i];
+    apprBody.innerHTML=`<span class="badge">승인 대기 1건</span><h3>★ ${s.gate}</h3><p class="sm">회의실에서 팀장 ${dir.parts.length}명이 대기 중입니다. 승인 전까지 전 부서가 멈춥니다.</p>`;
+    apprGo.disabled=false;apprGo.textContent=s.btn;
+  }else{apprBody.innerHTML=`<span class="badge idle">대기 중인 안건 없음</span><p class="sm" style="margin-top:8px">${mode==='scenario'?'단계 진행 중입니다.':'자율 근무 중입니다. "오늘 업무 시작"을 누르면 차수가 돕니다.'}</p>`;
+    apprGo.disabled=true;apprGo.textContent='승인';}
+}
+apprGo.addEventListener('click',()=>{if(mode==='scenario'&&dir.phase==='gate')dir.approved=true;});
+
+// 대표 지시창
+const conLog=document.getElementById('conLog'),conForm=document.getElementById('conForm'),conInput=document.getElementById('conInput');
+const deptAlias={'기구1':'기구1팀','기구2':'기구2팀','EM':'EM 시뮬팀','PCB':'PCB 시뮬팀','회로1':'회로1팀','회로2':'회로2팀','측정':'성능측정팀','리뷰':'성능리뷰팀','협업':'협업소통팀','자동화':'자동화운영팀','비서':'비서실'};
+function logMsg(who,text,mine){const d=document.createElement('div');d.className='msg'+(mine?' me':'');
+  d.innerHTML=mine?'<span class="t"></span>':'<span class="w"></span><span class="t"></span>';
+  if(mine)d.querySelector('.t').textContent=text;else{d.querySelector('.w').textContent=who;d.querySelector('.t').textContent=text;}
+  conLog.appendChild(d);conLog.scrollTop=conLog.scrollHeight;}
+function bubble(e,text){e.say=text;e.sayClear=simClock+3800;}
+const leadOf=dept=>employees.find(e=>e.dept===dept&&e.lead);
+function findResponder(s){let hit=employees.find(e=>s.includes(e.name));if(hit)return hit;
+  hit=employees.find(e=>new RegExp(e.code.replace(/-/g,'\\-'),'i').test(s));if(hit)return hit;
+  const r=rooms.find(r=>r.emp&&s.includes(r.name));if(r)return leadOf(r.name);
+  for(const k in deptAlias)if(s.includes(k))return leadOf(deptAlias[k]);
+  if(s.includes('비서'))return byCode['CHIEF'];return null;}
+function personAnswer(e){let line;
+  if(e.anim==='walk')line='지금 이동 중입니다.';
+  else if(e.state==='진행중')line=`${e.dept} 업무 진행 중입니다.`;
+  else if(e.state==='대기')line='앞 단계 결과를 기다립니다.';
+  else if(e.state==='연동대기')line='외부 자료가 없어 멈춰 있습니다. (미연동)';
+  else if(e.state==='승인대기')line='회의실에서 대표님 승인을 기다립니다.';
+  else if(e.state==='완료')line='이번 단계는 끝냈습니다.';else line='대기 중입니다.';
+  let extra='';if(e.lead){const team=employees.filter(t=>t.dept===e.dept),prog=team.filter(t=>t.state==='진행중').length;extra=` 저희 팀 ${team.length}명 중 ${prog}명 작업 중.`;}
+  logMsg(`${e.name}·${e.code}`,line+extra);bubble(e,'네, 대표님');}
+function answerWhy(){let msg;
+  if(mode==='scenario'){const s=PIPE[dir.i];
+    if(dir.phase==='gate')msg=`원인 하나 — 대표님 승인 대기입니다. "${s.gate}". 회의실에 팀장 ${dir.parts.length}명이 기다립니다. 승인만 주시면 다음 단계로 갑니다.`;
+    else if(dir.phase==='work'){const pct=Math.min(99,Math.round((simClock-dir.t0)/s.dur*100));msg=`병목은 ${s.dept.join('·')}입니다 — ${s.say.replace(/^[①-⑧]\s?/,'')} 진행 중(${pct}%). 지연 없습니다.`;}
+    else msg=`회의 진행 중입니다 — "${s.gate}" 안건. 곧 승인 요청 올립니다.`;
+  }else{const block=employees.filter(e=>e.state==='연동대기'),meet=employees.filter(e=>e.state==='승인대기');
+    if(block.length)msg=`병목 하나 — ${block[0].dept} ${block[0].name}(${block[0].code})가 연동 대기입니다. 외부 자료(승인원·실측·챔버 등)가 없어 멈춰 있어요. 나머지는 정상입니다.`;
+    else if(meet.length)msg=`병목 하나 — 회의실에 ${meet.length}명이 모여 논의 중입니다.`;
+    else msg='지연 없습니다. 전 부서 정상 근무 중입니다.';}
+  logMsg('비서실장 요약희',msg);const c=byCode['CHIEF'];if(c)bubble(c,'보고드립니다');}
+function briefNow(){const c=counts();logMsg('비서실장 요약희',`완료 ${c['완료']} · 진행중 ${c['진행중']} · 승인대기 ${c['승인대기']} · 연동대기 ${c['연동대기']}. ${mode==='scenario'?'DV'+dir.cycle+' 진행 중입니다.':'자유 근무 중입니다.'}`);}
+function summon(){if(mode==='scenario'){logMsg('비서실장 요약희','시나리오 진행 중이라 회의는 자동으로 열립니다.');return;}
+  meetingActive=true;
+  const leads=employees.filter(e=>e.lead);leads.forEach((e,i)=>{const seat=meetSeatFor(i)||e.home;e.hold=true;e.state='승인대기';e.dest={x:seat.x,y:seat.y};planPath(e,e.dest);});
+  logMsg('비서실장 요약희',`팀장 ${leads.length}명 회의실로 소집합니다. 마치면 "해산".`);pushFeed('대표 지시 — 팀장 회의 소집');}
+function dismiss(){const held=employees.filter(e=>e.hold);if(!held.length){logMsg('비서실장 요약희','현재 소집된 회의가 없습니다.');return;}
+  meetingActive=false;
+  held.forEach(e=>{e.hold=false;e.say=null;e.state='대기';e.dest={...e.home};planPath(e,e.dest);});logMsg('비서실장 요약희','회의 해산합니다.');pushFeed('회의 해산 · 각자 복귀');}
+function route(s){if(/왜.*(늦|지연)/.test(s))return answerWhy();if(s.includes('브리핑'))return briefNow();
+  if(s.includes('회의')&&s.includes('소집'))return summon();if(s.includes('해산')||s.includes('집중'))return dismiss();
+  const e=findResponder(s);if(e)return personAnswer(e);
+  logMsg('비서실장 요약희','부서·직원 이름이나 "왜 늦어져?", "회의 소집", "지금 브리핑"으로 말씀해 주세요.');}
+conForm.addEventListener('submit',ev=>{ev.preventDefault();const v=conInput.value.trim();if(!v)return;logMsg('나(대표)',v,true);conInput.value='';setTimeout(()=>route(v),240);});
+document.querySelectorAll('.quick button').forEach(b=>b.addEventListener('click',()=>{logMsg('나(대표)',b.dataset.q,true);setTimeout(()=>route(b.dataset.q),220);}));
+logMsg('비서실장 요약희','대표님, 지시 주세요. "왜 늦어져?", "회의 소집", 부서·직원 이름 모두 됩니다.');
+
+// 컨트롤
+const scenBtn=document.getElementById('scenBtn');
+scenBtn.addEventListener('click',()=>mode==='free'?startScenario():stopScenario());
+const pauseBtn=document.getElementById('pauseBtn');
+pauseBtn.addEventListener('click',()=>{paused=!paused;pauseBtn.textContent=paused?'▶ 재개':'Ⅱ 일시정지';pauseBtn.classList.toggle('on',paused);});
+document.querySelectorAll('#spd button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#spd button').forEach(x=>x.classList.remove('on'));b.classList.add('on');timeScale=+b.dataset.s;}));
+const afBtn=document.getElementById('afBtn');afBtn.addEventListener('click',()=>{af=!af;afBtn.classList.toggle('on',af);});
+document.getElementById('pubBtn').addEventListener('click',()=>{const c=counts();pushFeed(`📤 보고 발행 — 완료 ${c['완료']}·진행 ${c['진행중']}·대기 ${c['연동대기']}`);logMsg('비서실장 요약희','보고서 발행했습니다. (초안 — 실제 발송은 대표 승인 후)');});
+
+// 시계
+function tick(){const d=new Date();document.getElementById('clk').textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+setInterval(tick,1000);tick();
+
+// 이동
+function move(dx,dy){const nx=player.x+dx,ny=player.y+dy;if(!walkable(nx,ny))return;for(const e of employees)if(e.gx===nx&&e.gy===ny)return;player.x=nx;player.y=ny;updateStatus();}
+const km={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]};
+addEventListener('keydown',e=>{const m=km[e.key];if(m){e.preventDefault();move(m[0],m[1]);}});
+
+// 범례 (옷 색 = 상태)
+document.getElementById('legend').innerHTML=['진행중','대기','연동대기','승인대기','완료'].map(s=>
+  `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px"><span style="width:12px;height:12px;border-radius:3px;background:${P[s]}"></span>${s} <span style="color:var(--muted)">${STATE_MEAN[s]}</span></span>`).join('');
+
+// 호버 툴팁
+const tip=document.getElementById('tip');
+canvas.addEventListener('mousemove',ev=>{
+  const r=canvas.getBoundingClientRect();
+  const sx=(ev.clientX-r.left)*(canvas.width/r.width), sy=(ev.clientY-r.top)*(canvas.height/r.height);
+  let hit=null,best=15;for(const e of employees){const d=Math.hypot(e.ex-sx,e.ey-sy);if(d<best){best=d;hit=e;}}
+  hoverEmp=hit;
+  if(hit){canvas.style.cursor='pointer';
+    tip.innerHTML=`<div class="nm">${hit.name} · <span class="mono">${hit.code}</span>${hit.lead?' 👑팀장':''}</div>
+      <div class="role">${hit.dept} — ${ROLE[hit.code]||''}</div>
+      <span class="chip" style="background:${P[hit.state]}">${hit.state} · ${STATE_MEAN[hit.state]}</span>
+      <div class="anim">지금: ${animKor(hit.anim)}</div>`;
+    tip.hidden=false;
+    const tw=tip.offsetWidth||210,th=tip.offsetHeight||84;
+    let tx=ev.clientX+14,ty=ev.clientY+14;
+    if(tx+tw>innerWidth-8)tx=ev.clientX-tw-14; if(ty+th>innerHeight-8)ty=ev.clientY-th-14;
+    tip.style.left=tx+'px';tip.style.top=ty+'px';
+  } else {canvas.style.cursor='';tip.hidden=true;}
+});
+canvas.addEventListener('mouseleave',()=>{tip.hidden=true;hoverEmp=null;canvas.style.cursor='';});
+
+renderStatic();updateStatus();updatePills();updateProgress();updateRoster();updateApproval();
+requestAnimationFrame(frame);
+</script>

@@ -1,0 +1,19 @@
+{
+	"nodes":[
+		{"id":"3bde4a2a157cf3ab","type":"text","text":"1. 기구1팀\n하는일 : 스마트폰 기구물, 전기물의 물성 정보 추출\nA. 부품 승인원 pdf에서 Material 정보 추출(유전율, 도전율 등의 정보)하여 엑셀데이터로 정리\nB. 승인원에서 Material 정보가 없는 부품들은 CST Microwave Studio에서 T-solver 시뮬레이션 진행 가능하게끔, 물성 추천","x":-1260,"y":-220,"width":420,"height":220},
+		{"id":"8514acfdb6153f50","type":"text","text":"2. 기구2팀\n하는일 : CST 시뮬레이션 가능하게 기구물 수정\nA. 개발 차수 마다 스마트폰 기구 NX 기구 데이터를 CST Microwave studio로 import (.prt 파일)\nB. 기구1팀에서 추출한 부품별 물성을 CST Microwave Studio에서 적용\nC. T-solver 시뮬레이션 진행 가능하게, CAD 데이터 모델링(Boolean, 유사 물성 일원화 등)","x":-800,"y":-220,"width":420,"height":220},
+		{"id":"3b9e7f9f6a2397dd","type":"text","text":"3. EM 시뮬레이션팀\n하는일 : 메탈안테나만의 CST 안테나 시뮬레이션\nA. 기구2팀에서 작업한 데이터의 메탈 안테나만의 시뮬레이션 진행 위한 Port, Mesh, Boundary condition, solver 세팅\nB. CST 시뮬레이션 진행시 발생하는 Error 해결\nC. 시뮬레이션 완료시, Postprocessing으로 port별 S-parameter/TRP,TIS 예상값 추출 ","x":-340,"y":-220,"width":420,"height":220},
+		{"id":"7e13c435a60c3ae4","type":"text","text":"4. PCB 시뮬레이션팀\n하는일 : PCB Line loss 시뮬레이션 및 라인 최적화\nA. CST PCB Studio에 차수/지역향별 ODBB++ 파일 import\nB. SI FD Solver를 이용해, 지정 Net의 PCB Line loss 추출(S21)\nC. Conduction 단 PCB 매칭라인과 안테나단 PCB 매칭라인간 임피던스 정합이 제대로 이루어졌는지 검증하고, 최적의 라인 패턴, width 등을 추천","x":120,"y":-220,"width":420,"height":340},
+		{"id":"a335f82e92b05033","type":"text","text":"5. 회로 시뮬레이션1팀\n하는일 : 단독 시뮬레이션만을 이용한 매칭회로 최적화\nA. 안테나 회로도 pdf 파일을 ADS상에 구성\nB. ADS를 이용해, EM 시뮬레이션팀과 PCB 시뮬레이션팀에서 받은 S-parameter 데이터와 안테나 회로 간 연결 (메탈안테나.s1p - 안테나 회로 (LC 소자 사이사이 Net의 line loss .s2p 파일 연결)\nC. S-parameter parameter sweep시뮬레이션을 통해 회로 LC소자의 값 최적화통한 안테나 성능 개선\nD. LC 소자 시정수 변경 외 추천 회로 Best 3 정리","x":580,"y":-220,"width":560,"height":340},
+		{"id":"71701ad9027e0d2a","type":"text","text":"5. 회로 시뮬레이션2팀\n하는일 : 안테나개발그룹과의 협업을 이용한 매칭회로 최적화\nA. 다른 그룹(안테나 개발그룹)에서 제공한 실측 데이터(실물 개발 시료)의 특정 안테나 .s1p파일(PCB+회로+메탈 안테나 데이터)이나 안테나 passive 실측 데이터(bluetest .eff파일)을 분석하고, 회로 시뮬레이션 1팀에서 구상한 회로도에 맞추어, 최적의 매칭회로 구성","x":1160,"y":-220,"width":560,"height":340},
+		{"id":"b573eab370a293f1","type":"text","text":"6. 성능 측정팀\n하는일 : 안테나 Active data(TRP, TIS, T-put) 성능 측정\nA. 회로 시뮬레이션팀에서 추천한 시정수를 적용했을때의 안테나별 TRP, TIS, Throughput 값을 3D 챔버를 이용해 측정한다.(자동 측정프로그램 이용)\nB. 측정 결과를 엑셀 파일로 정리한다.(모델명/개발차수/지역향/사업자/채널/주파수 및 대역폭 정보 포함)","x":2020,"y":-195,"width":420,"height":290},
+		{"id":"020d81a49517e814","type":"text","text":"7. 성능 리뷰팀\n하는일 : 안테나 Active 측정결과의 Spec기준 Pass/Fail 여부 확인\nA. 성능 측정팀에서 측정한 결과를 토대로, HQE spec, 사업자 OTA 스펙에 Fail 되는지 확인하고, 특이사항을 메일로 보고한다. (스펙 참조 루트 제공)","x":2480,"y":-195,"width":420,"height":270},
+		{"id":"5affa28b2dc359c5","type":"text","text":"<검증 단계>","x":2600,"y":-340,"width":140,"height":50},
+		{"id":"e778b69347e269c1","type":"text","text":"<남기는 단계>","x":3720,"y":-340,"width":180,"height":50},
+		{"id":"c41df4d065d62c26","type":"text","text":"<개발 단계>","x":-130,"y":-400,"width":140,"height":50},
+		{"id":"1422b1119753aca8","type":"text","text":"8. 협업 소통팀\n하는일 : 개발차수간 회로 수정 가이드 작성\nA. 시뮬레이션팀과 성능측정/성능리뷰팀에서의 결과를 분석하여, 다음 차수의 PCB 회로 수정, 매칭회로 시정수 변경점을 엑셀 데이터로 정리한다.","x":2940,"y":-195,"width":420,"height":270},
+		{"id":"7dc4d2ec1c6da5f0","type":"text","text":"9. 자동화 운영팀\n하는일 : AI 팀간 연동상태 및 실패, 로그 분석 후 수정\nA. 팀간 연동상태, 실패, 재시도를 관리한다.","x":3510,"y":-195,"width":420,"height":270},
+		{"id":"1525d0f9b0da1750","type":"text","text":"10. 비서실\n하는일 : 전 부서 한줄 보고를 대표에게 요약\nA. 전 부서 한줄 보고를 모아 대표에게 요약","x":3980,"y":-195,"width":420,"height":270}
+	],
+	"edges":[]
+}
