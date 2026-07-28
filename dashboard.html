@@ -36,7 +36,8 @@
     background:linear-gradient(90deg,var(--tbar1),var(--tbar2));color:var(--tbar-ink)}
   .tbar .tt{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.2px}
   .tbar .wbtns{margin-left:auto;display:flex;gap:6px;color:rgba(255,255,255,.9)}
-  .tbar .wbtns i{width:15px;height:15px;border-radius:5px;background:rgba(255,255,255,.28);display:grid;place-items:center;
+  .win.collapsed .wbody{display:none}
+  .tbar .wbtns i{cursor:pointer;width:15px;height:15px;border-radius:5px;background:rgba(255,255,255,.28);display:grid;place-items:center;
     font-style:normal;font-size:9px;cursor:default}
   .wbody{padding:16px}
   /* 히어로 */
@@ -109,7 +110,7 @@
   .badge{background:var(--lav);color:var(--lav-ink);border-radius:8px;padding:4px 9px;font-size:11px;font-weight:800;font-family:var(--mono)}
   .score{font-size:26px;font-weight:900;color:var(--pink-ink)}
   .appr h3{margin:6px 0 4px;font-size:15px}.appr .sm{color:var(--muted);font-size:12px;line-height:1.55;margin:0 0 14px}
-  .appr .go{width:100%;background:var(--yellow);color:var(--yellow-ink);border:1px solid #f3d98a;border-radius:11px;padding:12px;font-weight:800;cursor:pointer;font-size:13.5px}
+  .appr .go{display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;background:var(--yellow);color:var(--yellow-ink);border:1px solid #f3d98a;border-radius:11px;padding:12px;font-weight:800;cursor:pointer;font-size:13.5px}
   /* brief */
   .brief .date{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:700}
   .brief h3{margin:7px 0 12px;font-size:15.5px}
@@ -141,7 +142,7 @@
 
   <!-- 히어로 : 대표실 -->
   <section class="win hero">
-    <div class="tbar"><span class="tt">radiation_ax.exe — 대표실</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+    <div class="tbar"><span class="tt">radiation_ax.exe — 대표실</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
     <div class="wbody">
       <div class="kv">DV1 · 07:00 AUTO START</div>
       <h1>이번 개발 차수가 어디까지 왔는지 <mark>한눈에</mark> 보여드려요</h1>
@@ -165,7 +166,7 @@
   <!-- automation.status + team board -->
   <div class="g2">
     <section class="win">
-      <div class="tbar"><span class="tt">automation.status</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <div class="tbar"><span class="tt">automation.status</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
       <div class="wbody">
         <div class="nextrun"><div><div class="t">NEXT RUN</div><div class="big">차수 착수 · 07:00</div></div><span class="on">ON</span></div>
         <ol class="steps" id="steps"></ol>
@@ -173,7 +174,7 @@
     </section>
 
     <section class="win">
-      <div class="tbar"><span class="tt">team_office.board</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <div class="tbar"><span class="tt">team_office.board</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
       <div class="wbody">
         <div class="board-head">
           <div><div class="eyebrow">LIVE OFFICE</div><h2>11개 부서 · 팀장 11명 근무 현황</h2></div>
@@ -193,22 +194,22 @@
   <!-- integrations + approval + brief -->
   <div class="g3">
     <section class="win">
-      <div class="tbar"><span class="tt">integrations.link</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <div class="tbar"><span class="tt">integrations.link</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
       <div class="wbody"><ul class="ilist" id="ilist"></ul></div>
     </section>
 
     <section class="win appr">
-      <div class="tbar"><span class="tt">ceo.approval</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <div class="tbar"><span class="tt">ceo.approval</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
       <div class="wbody">
-        <div class="appr-top"><span class="badge">TOP 1 · 최적솔안</span><span class="score">Best 3</span></div>
+        <div class="appr-top"><span class="badge">TOP 1 · 회로1팀 안</span><span class="score">Best 3</span></div>
         <h3>★ 측정할 회로안 확정</h3>
         <p class="sm">회로1팀 sweep 근거 + 회로2팀 실측 반영안까지 올라왔습니다. 3D 챔버·시료 자원이 크니 대표님이 측정할 안을 정해주세요.</p>
-        <button class="go">회의실에서 검토 → 승인</button>
+        <a class="go" href="office-map.html">회의실에서 검토 → 승인</a>
       </div>
     </section>
 
     <section class="win brief">
-      <div class="tbar"><span class="tt">chief_secretary.brief</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <div class="tbar"><span class="tt">chief_secretary.brief</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
       <div class="wbody">
         <div class="date">2026.07.27 · 07:00 기준</div>
         <h3>대표님, 현재 진행 상황이에요.</h3>
@@ -225,12 +226,12 @@
 
   <!-- results -->
   <section class="win">
-    <div class="tbar"><span class="tt">result_storage.local</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+    <div class="tbar"><span class="tt">result_storage.local</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
     <div class="wbody">
       <p class="store-note">RECENT OUTPUTS · 저장 위치 D:\AX\AI Company</p>
       <div style="overflow-x:auto">
       <table class="tbl">
-        <thead><tr><th>결과물</th><th>담당팀</th><th>상태</th><th>바로가기</th></tr></thead>
+        <thead><tr><th>결과물</th><th>담당팀</th><th>상태</th><th>저장 위치</th></tr></thead>
         <tbody id="results"></tbody>
       </table>
       </div>
@@ -268,17 +269,17 @@ document.getElementById('steps').innerHTML=STEPS.map((x,i)=>{
 
 // ── 11개 부서 (team_office.board)
 const DEPTS=[
-  {ic:'🔧',nm:'소재현 · 기구1팀',ds:'물성 정보 추출',st:'done',stage:'dev'},
-  {ic:'🧩',nm:'원보존 · 기구2팀',ds:'CST 기구 수정',st:'done',stage:'dev'},
-  {ic:'📡',nm:'세팅찬 · EM 시뮬팀',ds:'메탈안테나 시뮬',st:'done',stage:'dev'},
-  {ic:'📶',nm:'정합수 · PCB 시뮬팀',ds:'PCB Line loss',st:'done',stage:'dev'},
-  {ic:'🔌',nm:'최적솔 · 회로1팀',ds:'단독 매칭회로 Best 3',st:'done',stage:'dev'},
-  {ic:'🧪',nm:'실측판 · 회로2팀',ds:'실측 반영 매칭회로',st:'appr',stage:'dev'},
-  {ic:'📊',nm:'재현확 · 성능측정팀',ds:'TRP/TIS 챔버 측정',st:'wait',stage:'verify'},
-  {ic:'✅',nm:'판정관 · 성능리뷰팀',ds:'Spec Pass/Fail',st:'idle',stage:'verify'},
-  {ic:'📝',nm:'근거찬 · 협업소통팀',ds:'차수 수정 가이드',st:'idle',stage:'record'},
-  {ic:'⚙️',nm:'연동수 · 자동화운영팀',ds:'연동·로그 관리',st:'work',stage:'record'},
-  {ic:'🗂',nm:'요약희 · 비서실',ds:'전사 브리핑 취합',st:'work',stage:'record'},
+  {ic:'🔧',nm:'손흥민 · 기구1팀',ds:'물성 정보 추출',st:'done',stage:'dev'},
+  {ic:'🧩',nm:'기성용 · 기구2팀',ds:'CST 기구 수정',st:'done',stage:'dev'},
+  {ic:'📡',nm:'류현진 · EM 시뮬팀',ds:'메탈안테나 시뮬',st:'done',stage:'dev'},
+  {ic:'📶',nm:'김연경 · PCB 시뮬팀',ds:'PCB Line loss',st:'done',stage:'dev'},
+  {ic:'🔌',nm:'김연아 · 회로1팀',ds:'단독 매칭회로 Best 3',st:'done',stage:'dev'},
+  {ic:'🧪',nm:'유재석 · 회로2팀',ds:'실측 반영 매칭회로',st:'appr',stage:'dev'},
+  {ic:'📊',nm:'최민식 · 성능측정팀',ds:'TRP/TIS 챔버 측정',st:'wait',stage:'verify'},
+  {ic:'✅',nm:'카리나 · 성능리뷰팀',ds:'Spec Pass/Fail',st:'idle',stage:'verify'},
+  {ic:'📝',nm:'박제니 · 협업소통팀',ds:'차수 수정 가이드',st:'idle',stage:'record'},
+  {ic:'⚙️',nm:'박찬호 · 자동화운영팀',ds:'연동·로그 관리',st:'work',stage:'record'},
+  {ic:'🗂',nm:'백지헌 · 비서실',ds:'전사 브리핑 취합',st:'work',stage:'record'},
 ];
 const PILL={done:['p-done','완료'],work:['p-work','진행중'],appr:['p-appr','승인대기'],wait:['p-wait','연동대기'],idle:['p-idle','대기']};
 const cardsEl=document.getElementById('cards');
@@ -319,5 +320,11 @@ const RES=[
   ['실측 반영 매칭회로 안','회로2팀','검토','p-appr'],
 ];
 document.getElementById('results').innerHTML=RES.map(r=>
-  `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><span class="pill ${r[3]}">${r[2]}</span></td><td><a class="go" href="#">폴더 열기 ↗</a></td></tr>`).join('');
+  `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><span class="pill ${r[3]}">${r[2]}</span></td><td><span class="loc">D:\\AX\\AI Company</span></td></tr>`).join('');
+
+// ── 창 제목줄 아이콘 (min 접기 / max 복원 / close 숨김)
+document.querySelectorAll('.wbtns').forEach(b=>b.addEventListener('click',ev=>{
+  const i=ev.target.closest('i[data-w]');if(!i)return;const win=i.closest('.win');if(!win)return;
+  const a=i.dataset.w;if(a==='min')win.classList.toggle('collapsed');
+  else if(a==='max')win.classList.remove('collapsed');else win.style.display='none';}));
 </script>

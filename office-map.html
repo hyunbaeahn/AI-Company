@@ -30,7 +30,8 @@
   .tbar{display:flex;align-items:center;gap:8px;padding:7px 11px;background:linear-gradient(90deg,var(--tbar1),var(--tbar2));color:#fff}
   .tbar .tt{font-family:var(--mono);font-size:12px;font-weight:600}
   .tbar .wbtns{margin-left:auto;display:flex;gap:6px}
-  .tbar .wbtns i{width:15px;height:15px;border-radius:5px;background:rgba(255,255,255,.28);display:grid;place-items:center;font-style:normal;font-size:9px}
+  .tbar .wbtns i{width:15px;height:15px;border-radius:5px;background:rgba(255,255,255,.28);display:grid;place-items:center;font-style:normal;font-size:9px;cursor:pointer}
+  .win.collapsed .wbody{display:none}
   .wbody{padding:14px}
   /* hero */
   .hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -111,7 +112,7 @@
   </div>
 
   <section class="win">
-    <div class="tbar"><span class="tt">radiation_ax.office — 라이브</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+    <div class="tbar"><span class="tt">radiation_ax.office — 라이브</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
     <div class="wbody hero">
       <div>
         <div class="kv">LIVE OFFICE · 34 AI STAFF · REAL-TIME</div>
@@ -145,7 +146,7 @@
       <canvas id="map" width="1000" height="800" aria-label="라이브 오피스 지도"></canvas>
     </div>
     <div class="side">
-      <section class="win"><div class="tbar"><span class="tt">ceo.console — 대표 지시창</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <section class="win"><div class="tbar"><span class="tt">ceo.console — 대표 지시창</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
         <div class="wbody">
           <div class="con-log" id="conLog"></div>
           <div class="quick">
@@ -155,14 +156,14 @@
           <form class="con-form" id="conForm"><input id="conInput" placeholder="부서·직원 이름, 질문…" autocomplete="off" aria-label="대표 지시"/><button type="submit" aria-label="전송">▶</button></form>
         </div></section>
 
-      <section class="win appr"><div class="tbar"><span class="tt">ceo.approval</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <section class="win appr"><div class="tbar"><span class="tt">ceo.approval</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
         <div class="wbody"><div id="apprBody"></div>
           <button class="go" id="apprGo" disabled>승인</button></div></section>
 
-      <section class="win"><div class="tbar"><span class="tt">live.feed</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <section class="win"><div class="tbar"><span class="tt">live.feed</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
         <div class="wbody"><ul class="feed" id="feed"></ul></div></section>
 
-      <section class="win"><div class="tbar"><span class="tt">staff.roster</span><span class="wbtns"><i>—</i><i>▢</i><i>✕</i></span></div>
+      <section class="win"><div class="tbar"><span class="tt">staff.roster</span><span class="wbtns"><i data-w="min">—</i><i data-w="max">▢</i><i data-w="close">✕</i></span></div>
         <div class="wbody"><div class="roster" id="roster"></div></div></section>
     </div>
   </div>
@@ -199,17 +200,17 @@ function shade(hex,a){const n=parseInt(hex.slice(1),16);let r=(n>>16)+a,g=((n>>8
 function roundRect(c,x,y,w,h,r){c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);}
 
 const rooms=[
-  {name:'기구1팀',   x:2, y:2, w:7, h:10, stage:'dev', door:'S', emp:[['MAT-CHK','소재현'],['EXTRACT','정추출'],['PROPOSE','추천희']]},
-  {name:'기구2팀',   x:10,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['ORIG-GD','원보존'],['IMPORT','임수입'],['APPLY','물성애'],['MODEL','모델경']]},
-  {name:'EM 시뮬팀', x:18,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['EM-LEAD','세팅찬'],['SETUP','포트나'],['SOLVE','에러솔'],['POST','추출빈']]},
-  {name:'PCB 시뮬팀',x:26,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['PCB-LEAD','정합수'],['ODB','오디비'],['S21','손실래'],['LINE','라인탁']]},
-  {name:'회로1팀',   x:34,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['RF1-LEAD','최적솔'],['ADS','회로다'],['LINK','연결진'],['SWEEP','스윕나'],['BEST3','베스트']]},
-  {name:'회로2팀',   x:42,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['RF2-LEAD','실측판'],['MEAS','이피에프'],['MATCH','매칭호']]},
-  {name:'성능측정팀',x:2, y:15,w:8, h:10, stage:'verify', door:'N', emp:[['MEAS-LEAD','재현확'],['CHAMBER','챔버미'],['SHEET','정리표']]},
-  {name:'성능리뷰팀',x:11,y:15,w:8, h:10, stage:'verify', door:'N', emp:[['SPEC-JDG','판정관'],['COMPARE','대조빈']]},
-  {name:'협업소통팀',x:20,y:15,w:8, h:10, stage:'record', door:'N', emp:[['GUIDE-LD','근거찬'],['WRITE','가이드나']]},
-  {name:'자동화운영팀',x:29,y:15,w:8,h:10, stage:'record', door:'N', emp:[['OPS-LEAD','연동수'],['LOG','로그미']]},
-  {name:'비서실',    x:38,y:15,w:8, h:10, stage:'record', door:'N', emp:[['CHIEF','요약희'],['DIGEST','취합나']]},
+  {name:'기구1팀',   x:2, y:2, w:7, h:10, stage:'dev', door:'S', emp:[['MAT-CHK','손흥민'],['EXTRACT','김민재'],['PROPOSE','이강인']]},
+  {name:'기구2팀',   x:10,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['ORIG-GD','기성용'],['IMPORT','이승우'],['APPLY','황인범'],['MODEL','황희찬']]},
+  {name:'EM 시뮬팀', x:18,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['EM-LEAD','류현진'],['SETUP','구자욱'],['SOLVE','이정후'],['POST','원태인']]},
+  {name:'PCB 시뮬팀',x:26,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['PCB-LEAD','김연경'],['ODB','인쿠시'],['S21','이다현'],['LINE','김다인']]},
+  {name:'회로1팀',   x:34,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['RF1-LEAD','김연아'],['ADS','박세리'],['LINK','장미란'],['SWEEP','안세영'],['BEST3','지소연']]},
+  {name:'회로2팀',   x:42,y:2, w:7, h:10, stage:'dev', door:'S', emp:[['RF2-LEAD','유재석'],['MEAS','이지은'],['MATCH','임영웅']]},
+  {name:'성능측정팀',x:2, y:15,w:8, h:10, stage:'verify', door:'N', emp:[['MEAS-LEAD','최민식'],['CHAMBER','이병헌'],['SHEET','박보검']]},
+  {name:'성능리뷰팀',x:11,y:15,w:8, h:10, stage:'verify', door:'N', emp:[['SPEC-JDG','카리나'],['COMPARE','김윈터']]},
+  {name:'협업소통팀',x:20,y:15,w:8, h:10, stage:'record', door:'N', emp:[['GUIDE-LD','박제니'],['WRITE','최로제']]},
+  {name:'자동화운영팀',x:29,y:15,w:8,h:10, stage:'record', door:'N', emp:[['OPS-LEAD','박찬호'],['LOG','추신수']]},
+  {name:'비서실',    x:38,y:15,w:8, h:10, stage:'record', door:'N', emp:[['CHIEF','백지헌'],['DIGEST','이채영']]},
   {name:'대표실',    x:2, y:28,w:10,h:10, stage:'etc', door:'N', ceo:['대표','안현배']},
   {name:'회의실',    x:13,y:28,w:12,h:10, stage:'etc', door:'N', meeting:true},
   {name:'라운지',    x:26,y:28,w:12,h:10, stage:'etc', door:'N', lounge:true},
@@ -527,22 +528,22 @@ function answerWhy(){let msg;
     if(block.length)msg=`병목 하나 — ${block[0].dept} ${block[0].name}(${block[0].code})가 연동 대기입니다. 외부 자료(승인원·실측·챔버 등)가 없어 멈춰 있어요. 나머지는 정상입니다.`;
     else if(meet.length)msg=`병목 하나 — 회의실에 ${meet.length}명이 모여 논의 중입니다.`;
     else msg='지연 없습니다. 전 부서 정상 근무 중입니다.';}
-  logMsg('비서실장 요약희',msg);const c=byCode['CHIEF'];if(c)bubble(c,'보고드립니다');}
-function briefNow(){const c=counts();logMsg('비서실장 요약희',`완료 ${c['완료']} · 진행중 ${c['진행중']} · 승인대기 ${c['승인대기']} · 연동대기 ${c['연동대기']}. ${mode==='scenario'?'DV'+dir.cycle+' 진행 중입니다.':'자유 근무 중입니다.'}`);}
-function summon(){if(mode==='scenario'){logMsg('비서실장 요약희','시나리오 진행 중이라 회의는 자동으로 열립니다.');return;}
+  logMsg('비서실장 백지헌',msg);const c=byCode['CHIEF'];if(c)bubble(c,'보고드립니다');}
+function briefNow(){const c=counts();logMsg('비서실장 백지헌',`완료 ${c['완료']} · 진행중 ${c['진행중']} · 승인대기 ${c['승인대기']} · 연동대기 ${c['연동대기']}. ${mode==='scenario'?'DV'+dir.cycle+' 진행 중입니다.':'자유 근무 중입니다.'}`);}
+function summon(){if(mode==='scenario'){logMsg('비서실장 백지헌','시나리오 진행 중이라 회의는 자동으로 열립니다.');return;}
   meetingActive=true;
   const leads=employees.filter(e=>e.lead);leads.forEach((e,i)=>{const seat=meetSeatFor(i)||e.home;e.hold=true;e.state='승인대기';e.dest={x:seat.x,y:seat.y};planPath(e,e.dest);});
-  logMsg('비서실장 요약희',`팀장 ${leads.length}명 회의실로 소집합니다. 마치면 "해산".`);pushFeed('대표 지시 — 팀장 회의 소집');}
-function dismiss(){const held=employees.filter(e=>e.hold);if(!held.length){logMsg('비서실장 요약희','현재 소집된 회의가 없습니다.');return;}
+  logMsg('비서실장 백지헌',`팀장 ${leads.length}명 회의실로 소집합니다. 마치면 "해산".`);pushFeed('대표 지시 — 팀장 회의 소집');}
+function dismiss(){const held=employees.filter(e=>e.hold);if(!held.length){logMsg('비서실장 백지헌','현재 소집된 회의가 없습니다.');return;}
   meetingActive=false;
-  held.forEach(e=>{e.hold=false;e.say=null;e.state='대기';e.dest={...e.home};planPath(e,e.dest);});logMsg('비서실장 요약희','회의 해산합니다.');pushFeed('회의 해산 · 각자 복귀');}
+  held.forEach(e=>{e.hold=false;e.say=null;e.state='대기';e.dest={...e.home};planPath(e,e.dest);});logMsg('비서실장 백지헌','회의 해산합니다.');pushFeed('회의 해산 · 각자 복귀');}
 function route(s){if(/왜.*(늦|지연)/.test(s))return answerWhy();if(s.includes('브리핑'))return briefNow();
   if(s.includes('회의')&&s.includes('소집'))return summon();if(s.includes('해산')||s.includes('집중'))return dismiss();
   const e=findResponder(s);if(e)return personAnswer(e);
-  logMsg('비서실장 요약희','부서·직원 이름이나 "왜 늦어져?", "회의 소집", "지금 브리핑"으로 말씀해 주세요.');}
+  logMsg('비서실장 백지헌','부서·직원 이름이나 "왜 늦어져?", "회의 소집", "지금 브리핑"으로 말씀해 주세요.');}
 conForm.addEventListener('submit',ev=>{ev.preventDefault();const v=conInput.value.trim();if(!v)return;logMsg('나(대표)',v,true);conInput.value='';setTimeout(()=>route(v),240);});
 document.querySelectorAll('.quick button').forEach(b=>b.addEventListener('click',()=>{logMsg('나(대표)',b.dataset.q,true);setTimeout(()=>route(b.dataset.q),220);}));
-logMsg('비서실장 요약희','대표님, 지시 주세요. "왜 늦어져?", "회의 소집", 부서·직원 이름 모두 됩니다.');
+logMsg('비서실장 백지헌','대표님, 지시 주세요. "왜 늦어져?", "회의 소집", 부서·직원 이름 모두 됩니다.');
 
 // 컨트롤
 const scenBtn=document.getElementById('scenBtn');
@@ -551,7 +552,7 @@ const pauseBtn=document.getElementById('pauseBtn');
 pauseBtn.addEventListener('click',()=>{paused=!paused;pauseBtn.textContent=paused?'▶ 재개':'Ⅱ 일시정지';pauseBtn.classList.toggle('on',paused);});
 document.querySelectorAll('#spd button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#spd button').forEach(x=>x.classList.remove('on'));b.classList.add('on');timeScale=+b.dataset.s;}));
 const afBtn=document.getElementById('afBtn');afBtn.addEventListener('click',()=>{af=!af;afBtn.classList.toggle('on',af);});
-document.getElementById('pubBtn').addEventListener('click',()=>{const c=counts();pushFeed(`📤 보고 발행 — 완료 ${c['완료']}·진행 ${c['진행중']}·대기 ${c['연동대기']}`);logMsg('비서실장 요약희','보고서 발행했습니다. (초안 — 실제 발송은 대표 승인 후)');});
+document.getElementById('pubBtn').addEventListener('click',()=>{const c=counts();pushFeed(`📤 보고 발행 — 완료 ${c['완료']}·진행 ${c['진행중']}·대기 ${c['연동대기']}`);logMsg('비서실장 백지헌','보고서 발행했습니다. (초안 — 실제 발송은 대표 승인 후)');});
 
 // 시계
 function tick(){const d=new Date();document.getElementById('clk').textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
@@ -586,6 +587,11 @@ canvas.addEventListener('mousemove',ev=>{
   } else {canvas.style.cursor='';tip.hidden=true;}
 });
 canvas.addEventListener('mouseleave',()=>{tip.hidden=true;hoverEmp=null;canvas.style.cursor='';});
+
+document.querySelectorAll('.wbtns').forEach(b=>b.addEventListener('click',ev=>{
+  const i=ev.target.closest('i[data-w]');if(!i)return;const win=i.closest('.win');if(!win)return;
+  const a=i.dataset.w;if(a==='min')win.classList.toggle('collapsed');
+  else if(a==='max')win.classList.remove('collapsed');else win.style.display='none';}));
 
 renderStatic();updateStatus();updatePills();updateProgress();updateRoster();updateApproval();
 requestAnimationFrame(frame);
