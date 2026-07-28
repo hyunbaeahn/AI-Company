@@ -293,6 +293,8 @@ function updateEmp(e,now,dt){
   if(e.path.length&&atCenter(e)){const n=e.path[0];
     if(!occupied(n.x,n.y,e)){e.path.shift();e.gx=n.x;e.gy=n.y;}
     else if(now>e.replanAt){planPath(e,e.dest);e.replanAt=now+400+Math.random()*500;}}
+  else if(!e.path.length&&atCenter(e)&&(e.gx!==e.dest.x||e.gy!==e.dest.y)&&now>e.replanAt){
+    planPath(e,e.dest);e.replanAt=now+400+Math.random()*500;} // 경로 탐색 실패 시 재시도(회의 소집 정체 등)
   const tx=(e.gx+.5)*T,ty=(e.gy+.5)*T,sp=BASE_SPEED*T*dt/1000;
   if(tx>e.ex)e.ex=Math.min(tx,e.ex+sp);else e.ex=Math.max(tx,e.ex-sp);
   if(ty>e.ey)e.ey=Math.min(ty,e.ey+sp);else e.ey=Math.max(ty,e.ey-sp);
